@@ -4,12 +4,13 @@ var cors = require('cors')
 const bodyParser = require('body-parser')
 var fs = require('fs')
 const path = require('path')
-var Chance = require('chance');
-var chance = new Chance();
+var Chance = require('chance')
+var chance = new Chance()
 const restaurantsJson = require('./json/restaurants.json')
+
 console.log('baaa server is starting')
 
-var server = app.listen(3001, () => {
+app.listen(3001, () => {
   console.log('listening...')
 })
 app.use(cors({ origin: 'http://localhost:3000' }))
@@ -22,16 +23,16 @@ app.get('/restaurants', (req, res) => {
 })
 
 app.post('/restaurants', (req, res, err) => {
-  fs.readFile('./json/restaurants.json', 'utf8', function readFileCallback(err, data) {
+  fs.readFile('./json/restaurants.json', 'utf8', function readFileCallback (err, data) {
+    if (err) console.log(err)
+    let obj = JSON.parse(data)
+    console.log(req.body)
+    obj.restaurants.push(req.body)
+    let json = JSON.stringify(obj)
+    fs.writeFileSync('./json/restaurants.json', json, 'utf8', function () {
       if (err) console.log(err)
-      obj = JSON.parse(data)
-      console.log(req.body)
-      obj.restaurants.push(req.body)
-      json = JSON.stringify(obj)
-      fs.writeFileSync('./json/restaurants.json', json, 'utf8', function () {
-          if(err) console.log(err)
-          console.log('restaurants.json saved')
-      })
+      console.log('restaurants.json saved')
+    })
   })
 
   res.send(console.log('hi'))
